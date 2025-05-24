@@ -1,7 +1,13 @@
 cdpg:
   - 'ubi9-16.9-2520'
-  # - 'ubi9-17.5-2520'
+  - 'ubi9-17.5-2520'
 vectorchord:
   - '0.3.0'
+  - '0.4.0'
+  - '0.4.1'
 pgvectors:
   - '0.3.0'
+  - '0.4.0'
+exclude: # Exclude combinations that are not supported
+  - cdpg: 'ubi9-17.5-2520'
+    pgvectors: '0.3.0'

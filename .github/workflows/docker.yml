@@ -100,9 +100,18 @@ jobs:
             name=ghcr.io/${{ github.repository }}
           tags: |
             type=raw,value=${{ matrix.cdpg }}-${{ matrix.vectorchord }},enable=${{ steps.should-release.outputs.result }}
-            type=raw,value=${{ steps.version.outputs.pg_major }}-${{ matrix.vectorchord }},enable=${{ steps.should-release.outputs.result }}
-            type=raw,value=${{ matrix.cdpg }},enable=${{ steps.should-release.outputs.result }}
-            type=raw,value=${{ steps.version.outputs.pg_major }},enable=${{ steps.should-release.outputs.result }}
+
+      - name: Generate docker image tags (migrate)
+        id: metadata-migrate
+        uses: docker/metadata-action@v5
+        with:
+          flavor: |
+            # Disable latest tag
+            latest=false
+          images: |
+            name=ghcr.io/${{ github.repository }}
+          tags: |
+            type=raw,value=${{ matrix.cdpg }}-${{ matrix.vectorchord }}-migrate-${{ matrix.pgvectors }},enable=${{ steps.should-release.outputs.result }}
 
       - name: Build and push image
         uses: docker/build-push-action@v6.17.0
@@ -114,6 +123,22 @@ jobs:
           cache-to: type=gha,mode=max
           tags: ${{ steps.metadata.outputs.tags }}
           labels: ${{ steps.metadata.outputs.labels }}
+          build-args: |
+            CRUNCHYDATA_VERSION=${{ matrix.cdpg }}
+            VECTORCHORD_VERSION=${{ matrix.vectorchord }}
+            PG_MAJOR=${{ steps.version.outputs.pg_major }}
+
+      - name: Build and push image (migrate)
+        uses: docker/build-push-action@v6.17.0
+        with:
+          context: .
+          file: Dockerfile.migrate
+          platforms: linux/amd64,linux/arm64
+          push: ${{ !github.event.pull_request.head.repo.fork && steps.metadata-migrate.outputs.tags != '' }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: ${{ steps.metadata-migrate.outputs.tags }}
+          labels: ${{ steps.metadata-migrate.outputs.labels }}
           build-args: |
             CRUNCHYDATA_VERSION=${{ matrix.cdpg }}
             PGVECTORS_VERSION=${{ matrix.pgvectors }}
