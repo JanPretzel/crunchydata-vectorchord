@@ -117,7 +117,7 @@ jobs:
           build-args: |
             CRUNCHYDATA_VERSION=${{ matrix.cdpg }}
             PGVECTORS_VERSION=${{ matrix.pgvectors }}
-            VHRHORD_VERSION=${{ matrix.vectorchord }}
+            VECTORCHORD_VERSION=${{ matrix.vectorchord }}
             PG_MAJOR=${{ steps.version.outputs.pg_major }}
 
   results:

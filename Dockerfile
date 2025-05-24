@@ -1,6 +1,6 @@
 ARG CRUNCHYDATA_VERSION
 ARG PGVECTORS_VERSION
-ARG VHRHORD_VERSION
+ARG VECTORCHORD_VERSION
 ARG PG_MAJOR
 
 FROM ubuntu:latest AS builder
@@ -13,10 +13,10 @@ ARG PG_MAJOR
 RUN curl --fail -o vectors.zip -sSL https://github.com/tensorchord/pgvecto.rs/releases/download/v${PGVECTORS_VERSION}/vectors-pg${PG_MAJOR}_x86_64-unknown-linux-gnu_${PGVECTORS_VERSION}.zip \
   && unzip -d vectors vectors.zip
 
-ARG VHRHORD_VERSION
+ARG VECTORCHORD_VERSION
 ARG PG_MAJOR
 
-RUN curl --fail -o vchord.zip -sSL https://github.com/tensorchord/VectorChord/releases/download/${VHRHORD_VERSION}/postgresql-${PG_MAJOR}-vchord_${VHRHORD_VERSION}_x86_64-linux-gnu.zip \
+RUN curl --fail -o vchord.zip -sSL https://github.com/tensorchord/VectorChord/releases/download/${VECTORCHORD_VERSION}/postgresql-${PG_MAJOR}-vchord_${VECTORCHORD_VERSION}_x86_64-linux-gnu.zip \
   && unzip -d vchord vchord.zip
 
 ARG CRUNCHYDATA_VERSION
