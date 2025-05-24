@@ -1,0 +1,36 @@
+ARG CRUNCHYDATA_VERSION
+ARG PGVECTORS_VERSION
+ARG VHRHORD_VERSION
+ARG PG_MAJOR
+
+FROM ubuntu:latest AS builder
+
+RUN apt-get update && apt-get install -y curl binutils unzip
+
+ARG PGVECTORS_VERSION
+ARG PG_MAJOR
+
+RUN curl --fail -o vectors.zip -sSL https://github.com/tensorchord/pgvecto.rs/releases/download/v${PGVECTORS_VERSION}/vectors-pg${PG_MAJOR}_x86_64-unknown-linux-gnu_${PGVECTORS_VERSION}.zip \
+  && unzip -d vectors vectors.zip
+
+ARG VHRHORD_VERSION
+ARG PG_MAJOR
+
+RUN curl --fail -o vchord.zip -sSL https://github.com/tensorchord/VectorChord/releases/download/${VHRHORD_VERSION}/postgresql-${PG_MAJOR}-vchord_${VHRHORD_VERSION}_x86_64-linux-gnu.zip \
+  && unzip -d vchord vchord.zip
+
+ARG CRUNCHYDATA_VERSION
+FROM registry.developers.crunchydata.com/crunchydata/crunchy-postgres:${CRUNCHYDATA_VERSION:-ubi9-16.8-2516}
+
+ARG PG_MAJOR
+
+COPY --chown=root:root --chmod=755 --from=builder ./vectors/vectors.so /usr/pgsql-${PG_MAJOR}/lib
+COPY --chown=root:root --chmod=755 --from=builder ./vectors/vectors*.sql /usr/pgsql-${PG_MAJOR}/share/extension/
+COPY --chown=root:root --chmod=755 --from=builder ./vectors/vectors.control /usr/pgsql-${PG_MAJOR}/share/extension
+
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.so /usr/pgsql-${PG_MAJOR}/lib
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord*.sql /usr/pgsql-${PG_MAJOR}/share/extension/
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.control /usr/pgsql-${PG_MAJOR}/share/extension
+
+WORKDIR /
+USER 26
