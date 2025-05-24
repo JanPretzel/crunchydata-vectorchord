@@ -17,9 +17,9 @@ FROM registry.developers.crunchydata.com/crunchydata/crunchy-postgres:${CRUNCHYD
 
 ARG PG_MAJOR
 
-COPY --chown=root:root --chmod=755 --from=builder ./vectors/vectors.so /usr/pgsql-${PG_MAJOR}/lib
-COPY --chown=root:root --chmod=755 --from=builder ./vectors/vectors*.sql /usr/pgsql-${PG_MAJOR}/share/extension/
-COPY --chown=root:root --chmod=755 --from=builder ./vectors/vectors.control /usr/pgsql-${PG_MAJOR}/share/extension
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.so /usr/pgsql-${PG_MAJOR}/lib
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord*.sql /usr/pgsql-${PG_MAJOR}/share/extension/
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.control /usr/pgsql-${PG_MAJOR}/share/extension
 
 WORKDIR /
 USER 26
