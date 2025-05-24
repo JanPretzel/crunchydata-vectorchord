@@ -120,16 +120,16 @@ jobs:
             VHRHORD_VERSION=${{ matrix.vectorchord }}
             PG_MAJOR=${{ steps.version.outputs.pg_major }}
 
-    results:
-      if: ${{ always() }}
-      runs-on: ubuntu-latest
-      name: Build results
-      needs: [build_and_push]
-      steps:
-        - run: |
-            result="${{ needs.build_and_push.result }}"
-            if [[ $result == "success" || $result == "skipped" ]]; then
-              exit 0
-            else
-              exit 1
-            fi
+  results:
+    if: ${{ always() }}
+    runs-on: ubuntu-latest
+    name: Build results
+    needs: [build_and_push]
+    steps:
+      - run: |
+          result="${{ needs.build_and_push.result }}"
+          if [[ $result == "success" || $result == "skipped" ]]; then
+            exit 0
+          else
+            exit 1
+          fi
