@@ -114,7 +114,7 @@ jobs:
             type=raw,value=${{ matrix.cdpg }}-${{ matrix.vectorchord }}-migrate-${{ matrix.pgvectors }},enable=${{ steps.should-release.outputs.result }}
 
       - name: Build and push image
-        uses: docker/build-push-action@v6.17.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: .
           platforms: linux/amd64,linux/arm64
@@ -129,7 +129,7 @@ jobs:
             PG_MAJOR=${{ steps.version.outputs.pg_major }}
 
       - name: Build and push image (migrate)
-        uses: docker/build-push-action@v6.17.0
+        uses: docker/build-push-action@v6.18.0
         with:
           context: .
           file: Dockerfile.migrate
