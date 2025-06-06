@@ -17,9 +17,15 @@ FROM registry.developers.crunchydata.com/crunchydata/crunchy-postgres:${CRUNCHYD
 
 ARG PG_MAJOR
 
-COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.so /usr/pgsql-${PG_MAJOR}/lib
+# Pre v 0.4.2 folder structure
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.so* /usr/pgsql-${PG_MAJOR}/lib
 COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord*.sql /usr/pgsql-${PG_MAJOR}/share/extension/
-COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.control /usr/pgsql-${PG_MAJOR}/share/extension
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/vchord.control* /usr/pgsql-${PG_MAJOR}/share/extension
+
+# Post v 0.4.2 folder structure
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/pkglibdir/vchord.so* /usr/pgsql-${PG_MAJOR}/lib
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/sharedir/extension/vchord*.sql /usr/pgsql-${PG_MAJOR}/share/extension/
+COPY --chown=root:root --chmod=755 --from=builder ./vchord/sharedir/extension/vchord.control* /usr/pgsql-${PG_MAJOR}/share/extension
 
 WORKDIR /
 USER 26
